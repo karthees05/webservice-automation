@@ -1,0 +1,28 @@
+# Gradle
+.gradle/
+build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# VS Code
+.vscode/
+
+# Cucumber/Maven reports (if applicable)
+target/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
