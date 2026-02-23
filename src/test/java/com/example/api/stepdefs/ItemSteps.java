@@ -1,23 +1,17 @@
 package com.example.api.stepdefs;
 
 import com.example.api.client.ApiClient;
-import com.example.api.config.Config;
 import com.example.api.model.DeviceObject;
 import com.example.api.utils.TestContext;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import org.hamcrest.Matchers;
 
 import java.util.HashMap;
-import java.util.Map;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class ItemSteps {
