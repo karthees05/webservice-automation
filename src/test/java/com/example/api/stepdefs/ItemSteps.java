@@ -52,9 +52,21 @@ public class ItemSteps {
         deviceObject.getData().put(key, value);
     }
 
+    @Given("I have an/a {string} header with value {string}")
+    public void iHaveAnHeaderWithValue(String key, String value) {
+        context.set("header_" + key, value);
+    }
+
     @When("I send a POST request to create the item")
     public void iSendAPOSTRequestToCreateTheItem() {
-        response = apiClient.createObject(deviceObject);
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        
+        if (contentType == null) {
+            contentType = "application/json";
+        }
+        
+        response = apiClient.createObject(deviceObject, apiKey, contentType);
         
         if (response.statusCode() == 200) {
             String id = response.jsonPath().getString("id");
@@ -87,12 +99,16 @@ public class ItemSteps {
     @When("I send a GET request for the created item ID")
     public void iSendAGETRequestForTheCreatedItemID() {
         String id = (String) context.get("lastCreatedId");
-        response = apiClient.getObject(id);
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.getObject(id, apiKey, contentType);
     }
 
     @When("I send a GET request to list all items")
     public void iSendAGETRequestToListAllItems() {
-        response = apiClient.listObjects();
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.listObjects(apiKey, contentType);
     }
 
     @Then("the response should be a list of items")
@@ -103,7 +119,9 @@ public class ItemSteps {
     @When("I send a DELETE request for the created item ID")
     public void iSendADELETERequestForTheCreatedItemID() {
         String id = (String) context.get("lastCreatedId");
-        response = apiClient.deleteObject(id);
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.deleteObject(id, apiKey, contentType);
     }
 
     @And("the response message should confirm deletion")
@@ -118,7 +136,9 @@ public class ItemSteps {
 
     @When("I send a GET request for item ID {string}")
     public void iSendAGETRequestForItemID(String id) {
-        response = apiClient.getObject(id);
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.getObject(id, apiKey, contentType);
     }
 
     @And("the response should match the Device schema")

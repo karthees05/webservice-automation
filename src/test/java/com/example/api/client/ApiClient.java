@@ -13,21 +13,79 @@ public class ApiClient {
     }
 
     public Response createObject(DeviceObject device) {
-        return RestAssured.given()
-                .contentType(ContentType.JSON)
-                .body(device)
+        return createObject(device, null);
+    }
+
+    public Response createObject(DeviceObject device, String apiKey) {
+        return createObject(device, apiKey, "application/json");
+    }
+
+    public Response createObject(DeviceObject device, String apiKey, String contentType) {
+        var request = RestAssured.given();
+        
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+        
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+        
+        return request.body(device)
                 .post(Config.OBJECTS_ENDPOINT);
     }
 
     public Response getObject(String id) {
-        return RestAssured.get(Config.OBJECTS_ENDPOINT + "/" + id);
+        return getObject(id, null, "application/json");
+    }
+
+    public Response getObject(String id, String apiKey, String contentType) {
+        var request = RestAssured.given();
+        
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+        
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+        
+        return request.get(Config.OBJECTS_ENDPOINT + "/" + id);
     }
 
     public Response listObjects() {
-        return RestAssured.get(Config.OBJECTS_ENDPOINT);
+        return listObjects(null, "application/json");
+    }
+
+    public Response listObjects(String apiKey, String contentType) {
+        var request = RestAssured.given();
+        
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+        
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+        
+        return request.get(Config.OBJECTS_ENDPOINT);
     }
 
     public Response deleteObject(String id) {
-        return RestAssured.delete(Config.OBJECTS_ENDPOINT + "/" + id);
+        return deleteObject(id, null, "application/json");
+    }
+
+    public Response deleteObject(String id, String apiKey, String contentType) {
+        var request = RestAssured.given();
+        
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+        
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+        
+        return request.delete(Config.OBJECTS_ENDPOINT + "/" + id);
     }
 }

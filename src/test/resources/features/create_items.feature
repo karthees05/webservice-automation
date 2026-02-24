@@ -7,6 +7,8 @@ Feature: Create Items API
   @create_object
   Scenario: Verify an item can be created
     Given I have device data with name "Apple MacBook Pro 16"
+    And I have an "x-api-key" header with value "0b78d9ba-8ee3-4362-90ae-d364bc590812"
+    And I have a "Content-Type" header with value "application/json"
     And the device has "year" as int value 2019
     And the device has "price" as double value 1849.99
     And the device has "CPU model" as string value "Intel Core i9"

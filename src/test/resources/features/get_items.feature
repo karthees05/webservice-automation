@@ -6,7 +6,9 @@ Feature: Get Items API
 
   @retrieve_specific_object
   Scenario: Ability to return an item
-    Given I have an existing item created with name "iPhone 15 Pro"
+    Given I have an "x-api-key" header with value "0b78d9ba-8ee3-4362-90ae-d364bc590812"
+    And I have a "Content-Type" header with value "application/json"
+    And I have an existing item created with name "iPhone 15 Pro"
     When I send a GET request for the created item ID
     Then the response status code should be 200
     And the response should contain the device name "iPhone 15 Pro"
@@ -14,6 +16,8 @@ Feature: Get Items API
 
   @retrieve_list_of_objects
   Scenario: Ability to list multiple items
+    Given I have an "x-api-key" header with value "0b78d9ba-8ee3-4362-90ae-d364bc590812"
+    And I have a "Content-Type" header with value "application/json"
     When I send a GET request to list all items
     Then the response status code should be 200
     And the response should be a list of items
@@ -21,5 +25,7 @@ Feature: Get Items API
 
   @get_unknown_object
   Scenario: Error case - Get non-existent item
+    Given I have an "x-api-key" header with value "0b78d9ba-8ee3-4362-90ae-d364bc590812"
+    And I have a "Content-Type" header with value "application/json"
     When I send a GET request for item ID "non-existent-id-12345"
     Then the response status code should be 404
