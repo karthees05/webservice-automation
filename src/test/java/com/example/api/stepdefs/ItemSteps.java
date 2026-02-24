@@ -58,7 +58,7 @@ public class ItemSteps {
     }
 
     @When("I send a POST request to create the item")
-    public void iSendAPOSTRequestToCreateTheItem() {
+    public void iSendAPOSTRequestToCreateTheItem() throws JsonProcessingException {
         String apiKey = (String) context.get("header_x-api-key");
         String contentType = (String) context.get("header_Content-Type");
         
@@ -66,7 +66,13 @@ public class ItemSteps {
             contentType = "application/json";
         }
         
-        response = apiClient.createObject(deviceObject, apiKey, contentType);
+        Object body = deviceObject;
+        if (!contentType.contains("json") && deviceObject != null) {
+            // Manually serialize if not JSON to avoid RestAssured serialization error
+            body = new ObjectMapper().writeValueAsString(deviceObject);
+        }
+        
+        response = apiClient.createObject(body, apiKey, contentType);
         
         if (response.statusCode() == 200) {
             String id = response.jsonPath().getString("id");
@@ -74,23 +80,64 @@ public class ItemSteps {
         }
     }
 
+    @When("I send a POST request to create the item with a malformed body")
+    public void iSendAPOSTRequestToCreateTheItemWithAMalformedBody() {
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+
+        if (contentType == null) {
+            contentType = "application/json";
+        }
+
+        String malformedJson = "{ \"name\": \"Malformed\", \"data\": { \"year\": 2019 "; // Missing closing braces
+        response = apiClient.createObject(malformedJson, apiKey, contentType);
+    }
+
+    @When("I send a POST request to create the item with an empty body")
+    public void iSendAPOSTRequestToCreateTheItemWithAnEmptyBody() {
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        
+        if (contentType == null) {
+            contentType = "application/json";
+        }
+        
+        response = apiClient.createObject("", apiKey, contentType);
+    }
+
+    @When("I send a POST request to create the item with missing name")
+    public void iSendAPOSTRequestToCreateTheItemWithMissingName() {
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        
+        if (contentType == null) {
+            contentType = "application/json";
+        }
+        
+        DeviceObject device = DeviceObject.builder()
+                .data(new HashMap<>())
+                .build();
+        
+        response = apiClient.createObject(device, apiKey, contentType);
+    }
+
     @Then("the response status code should be {int}")
     public void theResponseStatusCodeShouldBe(int statusCode) {
-        response.then().statusCode(statusCode);
+        response.then().assertThat().statusCode(statusCode);
     }
 
     @And("the response should contain the device name {string}")
     public void theResponseShouldContainTheDeviceName(String name) {
-        response.then().body("name", equalTo(name));
+        response.then().assertThat().body("name", equalTo(name));
     }
 
     @And("the response should contain a valid ID")
     public void theResponseShouldContainAValidID() {
-        response.then().body("id", notNullValue());
+        response.then().assertThat().body("id", notNullValue());
     }
 
     @Given("I have an existing item created with name {string}")
-    public void iHaveAnExistingItemCreatedWithName(String name) {
+    public void iHaveAnExistingItemCreatedWithName(String name) throws JsonProcessingException {
         iHaveDeviceDataWithName(name);
         iSendAPOSTRequestToCreateTheItem();
         response.then().statusCode(200);
@@ -113,7 +160,7 @@ public class ItemSteps {
 
     @Then("the response should be a list of items")
     public void theResponseShouldBeAListOfItems() {
-        response.then().body("$", Matchers.instanceOf(java.util.List.class));
+        response.then().assertThat().body("$", Matchers.instanceOf(java.util.List.class));
     }
 
     @When("I send a DELETE request for the created item ID")
@@ -126,7 +173,7 @@ public class ItemSteps {
 
     @And("the response message should confirm deletion")
     public void theResponseMessageShouldConfirmDeletion() {
-        response.then().body("message", containsStringIgnoringCase("deleted"));
+        response.then().assertThat().body("message", containsStringIgnoringCase("deleted"));
     }
 
     @When("I send a GET request for the deleted item ID")

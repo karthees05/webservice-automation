@@ -20,7 +20,7 @@ public class ApiClient {
         return createObject(device, apiKey, "application/json");
     }
 
-    public Response createObject(DeviceObject device, String apiKey, String contentType) {
+    public Response createObject(Object body, String apiKey, String contentType) {
         var request = RestAssured.given();
         
         if (contentType != null && !contentType.isEmpty()) {
@@ -31,8 +31,13 @@ public class ApiClient {
             request.header("x-api-key", apiKey);
         }
         
-        return request.body(device)
-                .post(Config.OBJECTS_ENDPOINT);
+    if (body instanceof String) {
+            request.body((String) body);
+        } else {
+            request.body(body);
+        }
+        
+        return request.post(Config.OBJECTS_ENDPOINT);
     }
 
     public Response getObject(String id) {
