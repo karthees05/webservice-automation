@@ -29,7 +29,7 @@ The framework tests the [restful-api.dev](https://restful-api.dev/) open-source 
 - `src/test/java/com/example/api/config`: Configuration constants (Base URL, Endpoints).
 - `src/test/java/com/example/api/utils`: Utility classes like `TestContext` for sharing state.
 - `src/test/java/com/example/api/stepdefs`: Cucumber step definitions implementation.
-- `src/test/resources/features`: BDD feature files.
+- `src/test/resources/features`: BDD feature files (`create_items.feature`, `get_items.feature`, `delete_items.feature`).
 - `RunCucumberTest.java`: JUnit 5 Platform Suite runner for Cucumber.
 
 ## Reusability Summary
