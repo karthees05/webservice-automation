@@ -54,3 +54,21 @@ Feature: Create Items API
     And I have a "Content-Type" header with value "application/json"
     When I send a POST request to create the item with missing name
     Then the response status code should be 200
+
+  @create_with_various_data
+  Scenario Outline: Create item with various data types
+    Given I have a valid session
+    And I have device data with name "<name>"
+    And the device has "year" as int value <year>
+    And the device has "price" as double value <price>
+    And the device has "model" as string value "<model>"
+    When I send a POST request to create the item
+    Then the response status code should be 200
+    And the response should contain the device name "<name>"
+    And the response should contain a valid ID
+
+    Examples:
+      | name                | year | price   | model            |
+      | Google Pixel 8      | 2023 | 699.99  | Pixel 8 Pro      |
+      | Samsung Galaxy S24  | 2024 | 999.00  | Ultra            |
+      | Dell XPS 15         | 2022 | 1500.50 | 9520             |

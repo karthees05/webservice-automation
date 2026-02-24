@@ -19,7 +19,9 @@ The framework tests the [restful-api.dev](https://restful-api.dev/) open-source 
 - **RestAssured:** Used for making HTTP requests and performing assertions.
 - **Data Sharing:** Demonstrates sharing information (like item IDs) between different steps and REST calls using a `TestContext` class.
 - **POJO Modeling:** Uses Java objects (with Lombok) for request/response bodies, promoting clean code and type safety.
-- **Error & Edge Case Handling:** Includes scenarios for non-existent items, invalid API keys, malformed JSON, empty bodies, and verification after deletion across all endpoints (POST, GET, DELETE).
+- **Error & Edge Case Handling:** Includes scenarios for non-existent items, invalid API keys, malformed JSON, empty bodies, and verification after deletion across all endpoints (POST, GET, PUT, PATCH, DELETE).
+- **Data-Driven Testing:** Demonstrates the use of Cucumber Scenario Outlines (Examples) to test multiple data sets with the same test logic.
+- **Bulk Retrieval:** Scenario for retrieving multiple specific items in a single request using multiple ID query parameters.
 - **JSON Path Assertions:** Utilizes RestAssured's built-in JSON Path support for robust assertions.
 - **Schema Validation:** Uses `rest-assured-json-schema-validator` to validate that the API response matches a predefined JSON schema file (`device_schema.json`).
 
@@ -30,7 +32,7 @@ The framework tests the [restful-api.dev](https://restful-api.dev/) open-source 
 - `src/test/java/com/example/api/config`: Configuration constants (Base URL, Endpoints).
 - `src/test/java/com/example/api/utils`: Utility classes like `TestContext` for sharing state.
 - `src/test/java/com/example/api/stepdefs`: Cucumber step definitions implementation.
-- `src/test/resources/features`: BDD feature files (`create_items.feature`, `get_items.feature`, `delete_items.feature`).
+- `src/test/resources/features`: BDD feature files (`create_items.feature`, `get_items.feature`, `update_items.feature`, `delete_items.feature`).
 - `src/test/resources/schemas`: JSON schema files for response validation.
 - `RunCucumberTest.java`: JUnit 5 Platform Suite runner for Cucumber.
 
@@ -64,6 +66,7 @@ After running the tests, an HTML report is generated at:
 The framework includes the following scenarios:
 1. **Verify an item can be created:** Tests `POST /objects` and verifies the response.
 2. **Ability to return an item:** Creates an item and then retrieves it using `GET /objects/{id}`.
-3. **Ability to list multiple items:** Tests `GET /objects`.
-4. **Ability to delete an item:** Creates an item, deletes it, and verifies it's gone.
-5. **Error case - Get non-existent item:** Verifies `404 Not Found` for an invalid ID.
+3. **Ability to update an item:** Supports full (`PUT`) and partial (`PATCH`) updates.
+4. **Ability to list multiple items:** Tests `GET /objects` with and without specific ID filters.
+5. **Ability to delete an item:** Creates an item, deletes it, and verifies it's gone.
+6. **Error cases:** Verifies `404 Not Found`, `403 Forbidden`, `400 Bad Request`, and `415 Unsupported Media Type` across various endpoints.
