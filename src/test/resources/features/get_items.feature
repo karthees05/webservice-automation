@@ -10,12 +10,14 @@ Feature: Get Items API
     When I send a GET request for the created item ID
     Then the response status code should be 200
     And the response should contain the device name "iPhone 15 Pro"
+    And the response should match the Device schema
 
-  @retrieve_lost_of_objects
+  @retrieve_list_of_objects
   Scenario: Ability to list multiple items
     When I send a GET request to list all items
     Then the response status code should be 200
     And the response should be a list of items
+    And the response should match the Device List schema
 
   @get_unknown_object
   Scenario: Error case - Get non-existent item

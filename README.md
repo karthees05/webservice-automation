@@ -21,6 +21,7 @@ The framework tests the [restful-api.dev](https://restful-api.dev/) open-source 
 - **POJO Modeling:** Uses Java objects (with Lombok) for request/response bodies, promoting clean code and type safety.
 - **Error & Edge Case Handling:** Includes scenarios for non-existent items and verification after deletion.
 - **JSON Path Assertions:** Utilizes RestAssured's built-in JSON Path support for robust assertions.
+- **Schema Validation:** Uses `rest-assured-json-schema-validator` to validate that the API response matches a predefined JSON schema file (`device_schema.json`).
 
 ## Project Structure
 
@@ -30,6 +31,7 @@ The framework tests the [restful-api.dev](https://restful-api.dev/) open-source 
 - `src/test/java/com/example/api/utils`: Utility classes like `TestContext` for sharing state.
 - `src/test/java/com/example/api/stepdefs`: Cucumber step definitions implementation.
 - `src/test/resources/features`: BDD feature files (`create_items.feature`, `get_items.feature`, `delete_items.feature`).
+- `src/test/resources/schemas`: JSON schema files for response validation.
 - `RunCucumberTest.java`: JUnit 5 Platform Suite runner for Cucumber.
 
 ## Reusability Summary

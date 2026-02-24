@@ -19,6 +19,7 @@ dependencies {
     testImplementation 'org.projectlombok:lombok:1.18.30'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
     testImplementation 'org.hamcrest:hamcrest:2.2'
+    testImplementation 'io.rest-assured:json-schema-validator:5.4.0'
 }
 
 test {

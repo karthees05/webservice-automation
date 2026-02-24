@@ -3,10 +3,13 @@ package com.example.api.stepdefs;
 import com.example.api.client.ApiClient;
 import com.example.api.model.DeviceObject;
 import com.example.api.utils.TestContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
 import org.hamcrest.Matchers;
 
@@ -116,5 +119,17 @@ public class ItemSteps {
     @When("I send a GET request for item ID {string}")
     public void iSendAGETRequestForItemID(String id) {
         response = apiClient.getObject(id);
+    }
+
+    @And("the response should match the Device schema")
+    public void theResponseShouldMatchTheDeviceSchema() {
+        response.then().assertThat()
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/device_schema.json"));
+    }
+
+    @And("the response should match the Device List schema")
+    public void theResponseShouldMatchTheDeviceListSchema() {
+        response.then().assertThat()
+                .body(JsonSchemaValidator.matchesJsonSchemaInClasspath("schemas/device_list_schema.json"));
     }
 }
