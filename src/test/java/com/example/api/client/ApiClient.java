@@ -76,6 +76,26 @@ public class ApiClient {
         return request.get(Config.OBJECTS_ENDPOINT);
     }
 
+    public Response listObjectsWithIds(java.util.List<String> ids, String apiKey, String contentType) {
+        var request = RestAssured.given();
+
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+
+        if (ids != null && !ids.isEmpty()) {
+            for (String id : ids) {
+                request.queryParam("id", id);
+            }
+        }
+
+        return request.get(Config.OBJECTS_ENDPOINT);
+    }
+
     public Response deleteObject(String id) {
         return deleteObject(id, null, "application/json");
     }
@@ -92,5 +112,45 @@ public class ApiClient {
         }
         
         return request.delete(Config.OBJECTS_ENDPOINT + "/" + id);
+    }
+
+    public Response updateObject(String id, Object body, String apiKey, String contentType) {
+        var request = RestAssured.given();
+
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+
+        if (body instanceof String) {
+            request.body((String) body);
+        } else {
+            request.body(body);
+        }
+
+        return request.put(Config.OBJECTS_ENDPOINT + "/" + id);
+    }
+
+    public Response partiallyUpdateObject(String id, Object body, String apiKey, String contentType) {
+        var request = RestAssured.given();
+
+        if (contentType != null && !contentType.isEmpty()) {
+            request.contentType(contentType);
+        }
+
+        if (apiKey != null && !apiKey.isEmpty()) {
+            request.header("x-api-key", apiKey);
+        }
+
+        if (body instanceof String) {
+            request.body((String) body);
+        } else {
+            request.body(body);
+        }
+
+        return request.patch(Config.OBJECTS_ENDPOINT + "/" + id);
     }
 }

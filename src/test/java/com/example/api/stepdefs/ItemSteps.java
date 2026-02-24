@@ -57,6 +57,12 @@ public class ItemSteps {
         context.set("header_" + key, value);
     }
 
+    @Given("I have a valid session")
+    public void iHaveAValidSession() {
+        context.set("header_x-api-key", "0b78d9ba-8ee3-4362-90ae-d364bc590812");
+        context.set("header_Content-Type", "application/json");
+    }
+
     @When("I send a POST request to create the item")
     public void iSendAPOSTRequestToCreateTheItem() throws JsonProcessingException {
         String apiKey = (String) context.get("header_x-api-key");
@@ -136,6 +142,12 @@ public class ItemSteps {
         response.then().assertThat().body("id", notNullValue());
     }
 
+    @And("I store the current ID as {string}")
+    public void iStoreTheCurrentIDAs(String key) {
+        String id = response.jsonPath().getString("id");
+        context.set(key, id);
+    }
+
     @Given("I have an existing item created with name {string}")
     public void iHaveAnExistingItemCreatedWithName(String name) throws JsonProcessingException {
         iHaveDeviceDataWithName(name);
@@ -151,6 +163,15 @@ public class ItemSteps {
         response = apiClient.getObject(id, apiKey, contentType);
     }
 
+    @When("I send a GET request for items with stored IDs {string} and {string}")
+    public void iSendAGETRequestForItemsWithStoredIDs(String key1, String key2) {
+        String id1 = (String) context.get(key1);
+        String id2 = (String) context.get(key2);
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.listObjectsWithIds(java.util.List.of(id1, id2), apiKey, contentType);
+    }
+
     @When("I send a GET request to list all items")
     public void iSendAGETRequestToListAllItems() {
         String apiKey = (String) context.get("header_x-api-key");
@@ -163,9 +184,21 @@ public class ItemSteps {
         response.then().assertThat().body("$", Matchers.instanceOf(java.util.List.class));
     }
 
+    @And("the response should contain items with names {string} and {string}")
+    public void theResponseShouldContainItemsWithNames(String name1, String name2) {
+        response.then().assertThat().body("name", hasItems(name1, name2));
+    }
+
     @When("I send a DELETE request for the created item ID")
     public void iSendADELETERequestForTheCreatedItemID() {
         String id = (String) context.get("lastCreatedId");
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.deleteObject(id, apiKey, contentType);
+    }
+
+    @When("I send a DELETE request for item ID {string}")
+    public void iSendADELETERequestForItemID(String id) {
         String apiKey = (String) context.get("header_x-api-key");
         String contentType = (String) context.get("header_Content-Type");
         response = apiClient.deleteObject(id, apiKey, contentType);
@@ -186,6 +219,29 @@ public class ItemSteps {
         String apiKey = (String) context.get("header_x-api-key");
         String contentType = (String) context.get("header_Content-Type");
         response = apiClient.getObject(id, apiKey, contentType);
+    }
+
+    @When("I send a PUT request to update the created item")
+    public void iSendAPUTRequestToUpdateTheCreatedItem() {
+        String id = (String) context.get("lastCreatedId");
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.updateObject(id, deviceObject, apiKey, contentType);
+    }
+
+    @When("I send a PATCH request to update the created item")
+    public void iSendAPATCHRequestToUpdateTheCreatedItem() {
+        String id = (String) context.get("lastCreatedId");
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.partiallyUpdateObject(id, deviceObject, apiKey, contentType);
+    }
+
+    @When("I send a PUT request to update item ID {string}")
+    public void iSendAPUTRequestToUpdateItemID(String id) {
+        String apiKey = (String) context.get("header_x-api-key");
+        String contentType = (String) context.get("header_Content-Type");
+        response = apiClient.updateObject(id, deviceObject, apiKey, contentType);
     }
 
     @And("the response should match the Device schema")

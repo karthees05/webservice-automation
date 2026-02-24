@@ -19,7 +19,7 @@ The framework tests the [restful-api.dev](https://restful-api.dev/) open-source 
 - **RestAssured:** Used for making HTTP requests and performing assertions.
 - **Data Sharing:** Demonstrates sharing information (like item IDs) between different steps and REST calls using a `TestContext` class.
 - **POJO Modeling:** Uses Java objects (with Lombok) for request/response bodies, promoting clean code and type safety.
-- **Error & Edge Case Handling:** Includes scenarios for non-existent items and verification after deletion.
+- **Error & Edge Case Handling:** Includes scenarios for non-existent items, invalid API keys, malformed JSON, empty bodies, and verification after deletion across all endpoints (POST, GET, DELETE).
 - **JSON Path Assertions:** Utilizes RestAssured's built-in JSON Path support for robust assertions.
 - **Schema Validation:** Uses `rest-assured-json-schema-validator` to validate that the API response matches a predefined JSON schema file (`device_schema.json`).
 
